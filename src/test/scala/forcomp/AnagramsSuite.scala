@@ -18,6 +18,12 @@ class AnagramsSuite {
   @Test def `sentenceOccurrences: abcd e (5pts)`: Unit =
     assertEquals(List(('a', 1), ('b', 1), ('c', 1), ('d', 1), ('e', 1)), sentenceOccurrences(List("abcd", "e")))
 
+  @Test def `sentenceOccurrences: abcd abcde (5pts)`: Unit =
+    assertEquals(List(('a', 2), ('b', 2), ('c', 2), ('d', 2), ('e', 1)), sentenceOccurrences(List("abcd", "abcde")))
+
+  @Test def `sentenceOccurrences: abcd abcd bat (5pts)`: Unit =
+    assertEquals(List(('a', 3), ('b', 3), ('c', 2), ('d', 2), ('t', 1)), sentenceOccurrences(List("abcd", "abcd", "bat")))
+
 
   @Test def `dictionaryByOccurrences.get: eat (10pts)`: Unit =
     assertEquals(Some(Set("ate", "eat", "tea")), dictionaryByOccurrences.get(List(('a', 1), ('e', 1), ('t', 1))).map(_.toSet))

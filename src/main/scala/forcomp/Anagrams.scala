@@ -37,7 +37,12 @@ object Anagrams extends AnagramsInterface {
     (w.toLowerCase.groupBy((element: Char) => element)).toList.map( pair => (pair._1, pair._2.length) ).sorted
 
   /** Converts a sentence into its character occurrence list. */
-  def sentenceOccurrences(s: Sentence): Occurrences = ???
+  def sentenceOccurrences(s: Sentence): Occurrences =
+    (for{
+      word <- s
+    } yield wordOccurrences(word) ).flatten.groupBy(pair => (pair._1, pair._2)).map(
+      pair => (pair._1._1, pair._2.length)
+    ).toList.sorted
 
   /** The `dictionaryByOccurrences` is a `Map` from different occurrences to a sequence of all
    *  the words that have that occurrence count.
