@@ -89,7 +89,10 @@ object Anagrams extends AnagramsInterface {
    *  Note that the order of the occurrence list subsets does not matter -- the subsets
    *  in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] = {
+    val listOfOccurrences: List[Occurrences] = occurrences.map( occurrence => (for(i <- 1 until (occurrence._2+1)) yield (occurrence._1,i)).toList)
+    listOfOccurrences.foldRight(List[Occurrences](Nil))((x,y) => y ++ (for(i <- x; j <- y) yield (i :: j)))
+  }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    *
@@ -101,7 +104,11 @@ object Anagrams extends AnagramsInterface {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    val (partition1,partition2) = x.partition(a => y.exists(b => a._1 == b._1))
+    val diff = for( (a,b) <- partition1.zip(y) if a._2 != b._2) yield (a._1,a._2-b._2)
+    (partition2 ++ diff).sorted
+  }
 
   /** Returns a list of all anagram sentences of the given sentence.
    *
@@ -143,7 +150,19 @@ object Anagrams extends AnagramsInterface {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def iteration(occurrences: Occurrences): List[Sentence] = {
+      if (occurrences.isEmpty) {
+        List(Nil)
+      } else {
+        val combinationsOfOcurrences = combinations(occurrences)
+        for (i <- combinationsOfOcurrences if dictionaryByOccurrences.keySet(i);
+             j <- dictionaryByOccurrences(i);
+             s <- iteration(subtract(occurrences, i))) yield {j :: s}
+      }
+    }
+    iteration(sentenceOccurrences(sentence))
+  }
 }
 
 object Dictionary {
