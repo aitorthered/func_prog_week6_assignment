@@ -28,7 +28,6 @@ class AnagramsSuite {
   @Test def `dictionaryByOccurrences.get: eat (10pts)`: Unit =
     assertEquals(Some(Set("ate", "eat", "tea")), dictionaryByOccurrences.get(List(('a', 1), ('e', 1), ('t', 1))).map(_.toSet))
 
-
   @Test def `wordAnagrams married (2pts)`: Unit =
     assertEquals(Set("married", "admirer"), wordAnagrams("married").toSet)
 
